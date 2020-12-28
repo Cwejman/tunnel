@@ -14,7 +14,7 @@ export const spiral2 = () => {
   const material = new THREE.LineBasicMaterial({ color: new THREE.Color('white'), linewidth: 3 });
 
   const geometry = new THREE.BufferGeometry();
-  geometry.addAttribute('position', C.matrixToAttribute(positions));
+  geometry.setAttribute('position', C.matrixToAttribute(positions));
 
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();
@@ -34,8 +34,8 @@ export const spiral = () => {
 
   // console.log(positions[0][1], positions[100][1], positions[500][1], positions[999][1])
   const geometry = new THREE.BufferGeometry();
-  geometry.addAttribute('position', C.matrixToAttribute(positions));
-  geometry.addAttribute('color', C.matrixToAttribute(colors));
+  geometry.setAttribute('position', C.matrixToAttribute(positions));
+  geometry.setAttribute('color', C.matrixToAttribute(colors));
 
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();
@@ -53,7 +53,7 @@ export const circle = (w) => {
   const material = new THREE.LineBasicMaterial({ color: new THREE.Color('white'), linewidth: 3 });
 
   const geometry = new THREE.BufferGeometry();
-  geometry.addAttribute('position', C.matrixToAttribute(positions));
+  geometry.setAttribute('position', C.matrixToAttribute(positions));
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();
 
