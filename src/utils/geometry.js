@@ -54,6 +54,11 @@ export const circle = (w) => {
 
   const geometry = new THREE.BufferGeometry();
   geometry.addAttribute('position', C.matrixToAttribute(positions));
+  const line = new THREE.Line( geometry, material );
+  line.computeLineDistances();
+
+  return line
+};
 
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();
