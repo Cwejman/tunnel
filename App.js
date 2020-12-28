@@ -22,7 +22,9 @@ export default function App() {
     actions.setDimensions(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     const scene = new THREE.Scene();
-    const moduleUpdaters = renderModules.map(f => f(scene, gl)).filter(x => x);
+    const moduleUpdaters = renderModules
+      .map(f => f({ scene, gl, initialState }))
+      .filter(x => x);
 
     const render = () => {
       timeout.current = requestAnimationFrame(render);

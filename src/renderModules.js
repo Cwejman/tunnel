@@ -3,7 +3,7 @@ import * as R from 'ramda';
 
 import * as G from './utils/geometry';
 
-const cameraModule = (scene, gl) => {
+const cameraModule = ({ scene, gl, initialState }) => {
   const aspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
   const camera = new THREE.PerspectiveCamera(70, aspect, 0.01, 1000);
   camera.position.set(0, 0, 20);
@@ -24,12 +24,12 @@ const cameraModule = (scene, gl) => {
   };
 };
 
-const lightModule = (scene) => {
+const lightModule = ({ scene }) => {
   const ambientLight = new THREE.AmbientLight(0x101010);
   scene.add(ambientLight);
 };
 
-const circlesModule = (scene) => {
+const circlesModule = ({ scene }) => {
   for (i = 0; i < 100; i++) {
     const circle = G.circle(0.2 + Math.round(Math.random() * 20) / 10 );
     circle.position.x = Math.round(Math.random() * 30);
@@ -42,17 +42,17 @@ const circlesModule = (scene) => {
   }
 };
 
-const pipeModule = (scene) => {
+const pipeModule = ({ scene }) => {
   const pipe = G.spiral();
   scene.add(pipe);
 };
 
-const spiralModule = (scene) => {
+const spiralModule = ({ scene }) => {
     const spiral = G.spiral2();
     scene.add(spiral);
 };
 
-const renderModule = (scene, gl) => {
+const renderModule = ({ scene, gl }) => {
   const renderer = new Renderer({ gl, antialias: true });
   renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
   renderer.setClearColor(0x000000, 0.0);
