@@ -48,7 +48,7 @@ export default function App() {
 
   return (
     <View
-      style={{ flex: 1, backgroundColor: '#111' }}
+      style={{ flex: 1, backgroundColor: '#000' }}
       onStartShouldSetResponder={() => true}
       onMoveShouldSetResponder={() => true}
       onResponderTerminationRequest={() => false}
