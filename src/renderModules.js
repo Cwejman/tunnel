@@ -6,21 +6,20 @@ import * as G from './utils/geometry';
 const cameraModule = ({ scene, gl, initialState }) => {
   const aspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
   const camera = new THREE.PerspectiveCamera(70, aspect, 0.01, 1000);
-  camera.position.set(0, 0, 20);
-  camera.lookAt(0, 0, 0);
+  const initPart = initialState.player.parts[0];
+  camera.position.copy(initPart.position);
+  camera.rotation.copy(initPart.rotation);
+  camera.translateZ(1);
   camera.name = 'camera-main';
 
   scene.add(camera);
 
-  return ({ controls }) => {
-    if (controls.active) {
-      const { yaw, roll, pitch, speed } = controls;
-      const q = new THREE.Quaternion(pitch *0.02, yaw *0.02, roll *0.01, 1);
-      camera.quaternion.multiply(q)
-      camera.quaternion.normalize()
-      camera.rotation.setFromQuaternion(camera.quaternion, camera.rotation.order);
-      camera.translateZ(-speed * 0.05);
-    }
+  return ({ player }) => {
+    const lastPart = player.parts[0].clone()
+    lastPart.translateZ(0.5);
+
+    camera.rotation.setFromQuaternion(lastPart.quaternion, lastPart.rotation.order);
+    camera.position.copy(lastPart.position);
   };
 };
 
@@ -41,6 +40,27 @@ const circlesModule = ({ scene }) => {
     scene.add(circle);
   }
 };
+
+const modOf = (n, offset, list) => list.filter((x, i) => !((i + offset) % n));
+
+const playerModule = ({ scene, gl, initialState }) => {
+  const group = new THREE.Group();
+
+  modOf(15, 3, initialState.player.parts).forEach((part) => {
+    const child = G.circle(1);
+    child.position.copy(part.position);
+    group.add(child);
+  });
+
+  scene.add(group);
+
+  return ({ player }) => {
+    modOf(15, 3, player.parts).forEach((part, i) => {
+      group.children[i].position.copy(part.position);
+      group.children[i].rotation.setFromVector3(part.rotation);
+    });
+  }
+}
 
 const pipeModule = ({ scene }) => {
   const pipe = G.spiral();
@@ -69,4 +89,4 @@ const renderModule = ({ scene, gl }) => {
   };
 }
 
-export default [cameraModule, lightModule, circlesModule, pipeModule, spiralModule, renderModule];
+export default [cameraModule, lightModule, circlesModule, pipeModule, spiralModule, playerModule, renderModule];

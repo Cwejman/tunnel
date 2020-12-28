@@ -7,8 +7,17 @@ import useStore from './src/hooks/useStore';
 import renderModules from './src/renderModules';
 import * as actionsMap from './src/actionsMap';
 
+const objectAtPos = (x, y, z) => {
+  const res = new THREE.Object3D();
+  res.position.set(x, y, z);
+  return res;
+};
+
 const initialState = {
   controls: { active: false },
+  player: {
+    parts: Array(300).fill(0).map(() => objectAtPos(0, 0, 20)),
+  },
   currCameraName: 'camera-main',
 };
 
@@ -28,6 +37,7 @@ export default function App() {
 
     const render = () => {
       timeout.current = requestAnimationFrame(render);
+      actions.preRender();
       const currState = state.current;
       moduleUpdaters.forEach(f => f(currState));
       gl.endFrameEXP();

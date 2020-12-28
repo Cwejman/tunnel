@@ -33,3 +33,26 @@ export const gestureMove = (e) => R.evolve({
 export const gestureRelease = () => R.assoc('controls', { active: false });
 
 export const setDimensions = (width, height) => R.assoc('dimensions', { width, height });
+
+export const preRender = () => (state) => {
+  const updates = [];
+
+  if (state.controls.active) {
+    const { pitch, roll, yaw, speed } = state.controls;
+
+    const ctrlQuaternion = new THREE.Quaternion(pitch, yaw, roll, 1);
+    const nextPart = state.player.parts[0].clone();
+
+    nextPart.quaternion.multiply(ctrlQuaternion).normalize();
+    nextPart.rotation.setFromQuaternion(nextPart.quaternion, nextPart.rotation.order);
+    nextPart.translateZ(-speed);
+
+    updates.push(R.evolve({
+      player: {
+        parts: parts => [nextPart, ...R.init(parts)],
+      },
+    }));
+  }
+
+  return updates.length ? R.pipe(...updates)(state) : state;
+};
