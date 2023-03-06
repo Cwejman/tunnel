@@ -54,11 +54,24 @@ export const circle = (w) => {
 
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', C.matrixToAttribute(positions));
+
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();
 
   return line
 };
+
+export const rect = (w, h) => {
+  const toPos = i => {
+    const t = i / 39 * 2 * Math.PI
+    return [Math.sin(t) * w/2, Math.cos(t) * w/2, 0];
+  }
+
+  const positions = [[-w/2, -h/2, 0], [w/2, -h/2, 0], [w/2, h/2, 0], [-w/2, h/2, 0], [-w/2, -h/2, 0]];
+  const material = new THREE.LineBasicMaterial({ color: new THREE.Color('white'), linewidth: 3 });
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', C.matrixToAttribute(positions));
 
   const line = new THREE.Line( geometry, material );
   line.computeLineDistances();

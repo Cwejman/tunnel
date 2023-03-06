@@ -16,7 +16,7 @@ const cameraModule = ({ scene, gl, initialState }) => {
 
   return ({ player }) => {
     const lastPart = player.parts[0].clone()
-    lastPart.translateZ(0.5);
+    lastPart.translateZ(0);
 
     camera.rotation.setFromQuaternion(lastPart.quaternion, lastPart.rotation.order);
     camera.position.copy(lastPart.position);
@@ -46,8 +46,8 @@ const modOf = (n, offset, list) => list.filter((x, i) => !((i + offset) % n));
 const playerModule = ({ scene, gl, initialState }) => {
   const group = new THREE.Group();
 
-  modOf(15, 3, initialState.player.parts).forEach((part) => {
-    const child = G.circle(1);
+  modOf(2, 0, initialState.player.parts).forEach((part) => {
+    const child = G.circle(0.1);
     child.position.copy(part.position);
     group.add(child);
   });
@@ -55,7 +55,7 @@ const playerModule = ({ scene, gl, initialState }) => {
   scene.add(group);
 
   return ({ player }) => {
-    modOf(15, 3, player.parts).forEach((part, i) => {
+    modOf(2, 0, player.parts).forEach((part, i) => {
       group.children[i].position.copy(part.position);
       group.children[i].rotation.setFromVector3(part.rotation);
     });
