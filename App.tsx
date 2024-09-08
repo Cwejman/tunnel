@@ -6,6 +6,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import useStore from './src/hooks/useStore';
 import renderModules from './src/renderModules';
 import * as actionsMap from './src/actionsMap';
+import * as G from "./src/utils/geometry";
 
 const objectAtPos = (x, y, z) => {
   const res = new THREE.Object3D();
@@ -31,9 +32,10 @@ export default function App() {
     actions.setDimensions(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
     const scene = new THREE.Scene();
+
     const moduleUpdaters = renderModules
-      .map(f => f({ scene, gl, initialState }))
-      .filter(x => x);
+        .map(f => f({ scene, gl, initialState }))
+        .filter(x => x);
 
     const render = () => {
       timeout.current = requestAnimationFrame(render);
@@ -47,17 +49,17 @@ export default function App() {
   };
 
   return (
-    <View
-      style={{ flex: 1, backgroundColor: '#000' }}
-      onStartShouldSetResponder={() => true}
-      onMoveShouldSetResponder={() => true}
-      onResponderTerminationRequest={() => false}
-      onResponderReject={() => console.log('reject')}
-      onResponderMove={actions.gestureMove}
-      onResponderRelease={actions.gestureRelease}
-    >
-      <GLView style={{ position: 'absolute', width: '100%', height: '100%' }} onContextCreate={createScene} />
-      {/* <View style={{ position: 'absolute', bottom: 20, left: 20 }}> </View> */}
-    </View>
+      <View
+          style={{ flex: 1, backgroundColor: '#222' }}
+          onStartShouldSetResponder={() => true}
+          onMoveShouldSetResponder={() => true}
+          onResponderTerminationRequest={() => false}
+          onResponderReject={() => console.log('reject')}
+          onResponderMove={actions.gestureMove}
+          onResponderRelease={actions.gestureRelease}
+      >
+        <GLView style={{ position: 'absolute', width: '100%', height: '100%' }} onContextCreate={createScene} />
+        {/* <View style={{ position: 'absolute', bottom: 20, left: 20 }}> </View> */}
+      </View>
   );
 }

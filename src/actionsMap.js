@@ -41,6 +41,7 @@ export const preRender = () => (state) => {
     const { pitch, roll, yaw, speed } = state.controls;
 
     const ctrlQuaternion = new THREE.Quaternion(pitch, yaw, roll, 1);
+
     const nextPart = state.player.parts[0].clone();
 
     nextPart.quaternion.multiply(ctrlQuaternion).normalize();

@@ -1,16 +1,18 @@
-import { Renderer, THREE } from 'expo-three';
+import { eenderer, THREE } from 'expo-three';
 import * as R from 'ramda';
 
 import * as G from './utils/geometry';
 
 const cameraModule = ({ scene, gl, initialState }) => {
   const aspect = gl.drawingBufferWidth / gl.drawingBufferHeight;
-  const camera = new THREE.PerspectiveCamera(70, aspect, 0.01, 1000);
   const initPart = initialState.player.parts[0];
+
+  const camera = new THREE.PerspectiveCamera(70, aspect, 0.01, 1000);
+
   camera.position.copy(initPart.position);
   camera.rotation.copy(initPart.rotation);
   camera.translateZ(1);
-  camera.name = 'camera-main';
+  camera.name = initialState.currCameraName;
 
   scene.add(camera);
 
@@ -73,20 +75,15 @@ const spiralModule = ({ scene }) => {
 };
 
 const renderModule = ({ scene, gl }) => {
-  const renderer = new Renderer({ gl, antialias: true });
+  const renderer = new THREE.WebGLRenderer({ canvas: gl.canvas, context: gl, antialias: true });
   renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
-  renderer.setClearColor(0x000000, 0.0);
+  renderer.setClearColor(0x0000ff, 0.0);
 
   scene.fog = new THREE.FogExp2(0x000000, 0.03);
 
-  let renderingCamera = {};
-
   return ({ currCameraName }) => {
-    if (currCameraName !== renderingCamera.name) {
-      renderingCamera = scene.children.find(R.propEq('name', currCameraName));
-    }
-    renderer.render(scene, renderingCamera);
+    const renderingCamera = scene.children.find(c => c.name === currCameraName);
+    if (renderingCamera) renderer.render(scene, renderingCamera);
   };
 }
-
 export default [cameraModule, lightModule, circlesModule, pipeModule, spiralModule, playerModule, renderModule];
